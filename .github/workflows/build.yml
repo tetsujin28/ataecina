@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
       - name: Tests du moteur
@@ -28,7 +28,7 @@ jobs:
       - name: Exe portable
         shell: bash
         run: cp target/release/ataecina.exe "Ataecina_$(grep -m1 '^version' src-tauri/Cargo.toml | cut -d'"' -f2)_portable.exe"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ataecina-windows
           path: |
@@ -37,7 +37,7 @@ jobs:
             target/release/bundle/nsis/*-setup.exe
       - name: Attacher à la Release
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             Ataecina_*_portable.exe
