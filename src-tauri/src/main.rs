@@ -18,7 +18,7 @@ use std::time::Instant;
 use tauri::{AppHandle, Manager, State};
 use tauri_plugin_dialog::DialogExt;
 
-const VERSION: &str = "Bêta 0.11.2";
+const VERSION: &str = "Bêta 0.11.3";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 #[serde(default)]

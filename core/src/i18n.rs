@@ -58,6 +58,7 @@ pub fn l(fr: &str) -> String {
         "Lire une carte directement demande les droits administrateur." => Some(["Reading a card directly requires administrator rights.", "Leer una tarjeta directamente requiere permisos de administrador."]),
         "Arrêt demandé..." => Some(["Stop requested...", "Detención solicitada..."]),
         "Relance en administrateur refusée ou impossible : " => Some(["Restart as administrator refused or impossible: ", "Reinicio como administrador rechazado o imposible: "]),
+        "droits administrateur refusés" => Some(["administrator rights refused", "derechos de administrador denegados"]),
         "lecture impossible de {} : {}" => Some(["cannot read {}: {}", "no se puede leer {}: {}"]),
         "taille de la source inconnue" => Some(["unknown source size", "tamaño del origen desconocido"]),
         "Une analyse ou une copie est déjà en cours." => Some(["An analysis or a copy is already running.", "Ya hay un análisis o una copia en curso."]),

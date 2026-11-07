@@ -195,10 +195,49 @@ mod win {
             let mut pi: PROCESS_INFORMATION = std::mem::zeroed();
             let ok = CreateProcessW(appli.as_ptr(), ligne.as_mut_ptr(), std::ptr::null(), std::ptr::null(), 0, CREATE_NEW_CONSOLE, std::ptr::null(), rep.as_ptr(), &si, &mut pi);
             if ok == 0 {
-                return Err(io::Error::last_os_error());
+                let e = io::Error::last_os_error();
+                // 740 : le programme exige les droits administrateur (cas de photorec_win.exe).
+                // Windows demande alors la confirmation, et le programme démarre élevé, toujours masqué.
+                if e.raw_os_error() == Some(740) {
+                    return lancer_eleve(prog, args, dossier);
+                }
+                return Err(e);
             }
             CloseHandle(pi.hThread);
             Ok(Box::new(ProcessusMasque { h: pi.hProcess }))
+        }
+    }
+
+    fn lancer_eleve(prog: &Path, args: &[std::ffi::OsString], dossier: &Path) -> io::Result<Box<dyn Processus>> {
+        use windows_sys::Win32::UI::Shell::{ShellExecuteExW, SEE_MASK_NOASYNC, SEE_MASK_NOCLOSEPROCESS, SHELLEXECUTEINFOW};
+        use windows_sys::Win32::UI::WindowsAndMessaging::SW_HIDE;
+        // paramètres seuls : la ligne complète moins le programme en tête
+        let complete = super::ligne_de_commande(prog, args);
+        let entete = super::ligne_de_commande(prog, &[]);
+        let params = wide(complete[entete.len()..].trim_start());
+        let fichier = wide(&prog.to_string_lossy());
+        let rep = wide(&dossier.to_string_lossy());
+        let verbe = wide("runas");
+        unsafe {
+            let mut info: SHELLEXECUTEINFOW = std::mem::zeroed();
+            info.cbSize = std::mem::size_of::<SHELLEXECUTEINFOW>() as u32;
+            info.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_NOASYNC;
+            info.lpVerb = verbe.as_ptr();
+            info.lpFile = fichier.as_ptr();
+            info.lpParameters = params.as_ptr();
+            info.lpDirectory = rep.as_ptr();
+            info.nShow = SW_HIDE;
+            if ShellExecuteExW(&mut info) == 0 {
+                let e = io::Error::last_os_error();
+                if e.raw_os_error() == Some(1223) {
+                    return Err(io::Error::new(io::ErrorKind::PermissionDenied, crate::i18n::l("droits administrateur refusés")));
+                }
+                return Err(e);
+            }
+            if info.hProcess.is_null() {
+                return Err(io::Error::new(io::ErrorKind::Other, "ShellExecuteEx"));
+            }
+            Ok(Box::new(ProcessusMasque { h: info.hProcess }))
         }
     }
 
