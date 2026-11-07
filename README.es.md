@@ -14,6 +14,16 @@ Gratuito, para Windows. Interfaz en español, francés e inglés.
 
 > Ataecina es una diosa de la antigua península ibérica, a menudo interpretada como «la Renacida». Como ella, este programa devuelve a la luz imágenes que se creían perdidas.
 
+<p align="center">
+  <img src="docs/recovery-es.webp" alt="Recuperación: tarjeta leída, rushes borrados encontrados" width="100%">
+  <br><i>Recuperación: tarjeta leída, rushes borrados encontrados</i>
+</p>
+
+<p align="center">
+  <img src="docs/repair-es.webp" alt="Reparación: rushes reparados con una referencia" width="100%">
+  <br><i>Reparación: rushes reparados con una referencia</i>
+</p>
+
 ## Descarga
 
 Ve a la **[página de Releases](https://github.com/tetsujin28/ataecina/releases)**:

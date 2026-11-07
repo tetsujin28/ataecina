@@ -14,6 +14,16 @@ Gratuit, pour Windows. Interface en français, anglais et espagnol.
 
 > Ataecina est une déesse de la péninsule ibérique antique, souvent interprétée comme « la Renaissante ». Comme elle, ce logiciel ramène à la lumière des images que l'on croyait perdues.
 
+<p align="center">
+  <img src="docs/recovery-fr.webp" alt="Récupération : carte lue, rushes supprimés retrouvés" width="100%">
+  <br><i>Récupération : carte lue, rushes supprimés retrouvés</i>
+</p>
+
+<p align="center">
+  <img src="docs/repair-fr.webp" alt="Réparation : rushes réparés avec une référence" width="100%">
+  <br><i>Réparation : rushes réparés avec une référence</i>
+</p>
+
 ## Téléchargement
 
 Rendez-vous sur la **[page des Releases](https://github.com/tetsujin28/ataecina/releases)** :

@@ -422,8 +422,9 @@ pub fn lister_lecteurs() -> Vec<Lecteur> {
     };
     vec![
         l("C:", "Windows", "NTFS", 1 << 40, false, true),
-        l("E:", "", "", 64 << 30, true, false),
-        l("F:", "LUMIX_GH5_TOURNAGE_JOUR2", "exFAT", 128 << 30, true, false),
+        l("D:", "Données", "NTFS", 2 << 40, false, false),
+        l("E:", "GH5_JOUR2", "exFAT", 64 << 30, true, false),
+        l("F:", "LUMIX_GH5_TOURNAGE_JOUR2_CARTE_B", "", 128 << 30, true, false),
     ]
 }
 

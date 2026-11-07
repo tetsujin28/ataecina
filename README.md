@@ -14,6 +14,16 @@ Free, for Windows. Interface in English, French and Spanish.
 
 > Ataecina is a goddess of the ancient Iberian Peninsula, often read as "the Reborn". Like her, this software brings back to light images we thought were lost.
 
+<p align="center">
+  <img src="docs/recovery-en.webp" alt="Recovery: card read, deleted clips found" width="100%">
+  <br><i>Recovery: card read, deleted clips found</i>
+</p>
+
+<p align="center">
+  <img src="docs/repair-en.webp" alt="Repair: clips repaired with a reference" width="100%">
+  <br><i>Repair: clips repaired with a reference</i>
+</p>
+
 ## Download
 
 Go to the **[Releases page](https://github.com/tetsujin28/ataecina/releases)**:

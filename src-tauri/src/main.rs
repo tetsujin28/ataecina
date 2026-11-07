@@ -83,7 +83,7 @@ impl App {
             "references": infos(&c.references),
             "files": infos(&c.files),
             "tools": {"untrunc": s(&u), "ffprobe": s(&fp), "ffmpeg": s(&fm)},
-            "windows": cfg!(windows),
+            "windows": cfg!(windows) || (cfg!(feature = "serveur-test") && std::env::var("ATAECINA_DEMO_WINDOWS").is_ok()),
             "version": VERSION,
             "photorec": tools::trouver_photorec(&c.rec.photorec).map(|p| p.to_string_lossy().to_string()).unwrap_or_default(),
             "admin": platform::est_admin(),
