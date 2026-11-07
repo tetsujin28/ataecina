@@ -221,6 +221,8 @@ window.I18N_DICT = [
   ["Vider", "Clear", "Vaciar"],
   ["Retirer", "Remove", "Quitar"],
   ["introuvable", "not found", "no encontrado"],
+  ["Ataecina tourne en administrateur", "Ataecina is running as administrator", "Ataecina se ejecuta como administrador"],
+  ["Lire une carte directement demande les droits administrateur.", "Reading a card directly requires administrator rights.", "Leer una tarjeta directamente requiere permisos de administrador."],
   ["Ignorer les fichiers _ftyp", "Skip _ftyp files", "Ignorar los archivos _ftyp"],
   ["Débuts de rush coupés par PhotoRec, souvent inutiles seuls", "Clip beginnings cut by PhotoRec, often useless on their own", "Inicios de rush cortados por PhotoRec, a menudo inútiles por sí solos"],
   ["Sortie et outils", "Output and tools", "Salida y herramientas"],

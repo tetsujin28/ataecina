@@ -186,7 +186,7 @@ dependencies = [
 
 [[package]]
 name = "ataecina"
-version = "0.11.3"
+version = "0.11.4"
 dependencies = [
  "ataecina-core",
  "base64 0.22.1",
@@ -201,7 +201,7 @@ dependencies = [
 
 [[package]]
 name = "ataecina-core"
-version = "0.11.3"
+version = "0.11.4"
 dependencies = [
  "chrono",
  "filetime",
