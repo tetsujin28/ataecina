@@ -20,7 +20,45 @@ pub fn read_at(f: &File, buf: &mut [u8], off: u64) -> io::Result<usize> {
     #[cfg(windows)]
     {
         use std::os::windows::fs::FileExt;
-        f.seek_read(buf, off)
+        // Un lecteur brut lit sans cache : certains lecteurs USB exigent une mémoire alignée.
+        // On passe alors par un tampon aligné sur 4096 octets.
+        if buf.as_ptr() as usize % 4096 == 0 || buf.len() % 512 != 0 {
+            return f.seek_read(buf, off);
+        }
+        let mut t = Aligne::new(buf.len());
+        let n = f.seek_read(t.as_mut(), off)?;
+        buf[..n].copy_from_slice(&t.as_mut()[..n]);
+        Ok(n)
+    }
+}
+
+/// Tampon aligné sur 4096 octets.
+#[cfg(windows)]
+pub(crate) struct Aligne {
+    ptr: *mut u8,
+    len: usize,
+    layout: std::alloc::Layout,
+}
+
+#[cfg(windows)]
+impl Aligne {
+    pub(crate) fn new(len: usize) -> Self {
+        let layout = std::alloc::Layout::from_size_align(len.max(1), 4096).expect("layout");
+        let ptr = unsafe { std::alloc::alloc_zeroed(layout) };
+        if ptr.is_null() {
+            std::alloc::handle_alloc_error(layout);
+        }
+        Aligne { ptr, len, layout }
+    }
+    pub(crate) fn as_mut(&mut self) -> &mut [u8] {
+        unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
+    }
+}
+
+#[cfg(windows)]
+impl Drop for Aligne {
+    fn drop(&mut self) {
+        unsafe { std::alloc::dealloc(self.ptr, self.layout) }
     }
 }
 
@@ -93,7 +131,9 @@ impl Source for FileSource {
         }
         let a = self.align;
         let debut = off / a * a;
-        let fin = ((off + n as u64 + a - 1) / a * a).min((self.taille + a - 1) / a * a);
+        // fin alignée sur 4096, sans dépasser la fin du support (multiple de 512 octets),
+        // sinon Windows refuse la dernière lecture
+        let fin = ((off + n as u64 + a - 1) / a * a).min((self.taille + 511) / 512 * 512);
         let mut b = vec![0u8; (fin - debut) as usize];
         let (k, _) = read_full(&self.f, &mut b, debut);
         let d = (off - debut) as usize;

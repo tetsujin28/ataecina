@@ -96,9 +96,12 @@ mod win {
     }
 
     pub fn taille_source(f: &File) -> io::Result<u64> {
-        let m = f.metadata()?;
-        if m.is_file() {
-            return Ok(m.len());
+        // Un lecteur brut (\\.\E:) refuse les demandes d'informations de fichier (erreur 87) :
+        // on demande d'abord la taille du disque, et on ne lit les métadonnées que pour un vrai fichier.
+        if let Ok(m) = f.metadata() {
+            if m.is_file() {
+                return Ok(m.len());
+            }
         }
         let mut longueur: i64 = 0;
         let mut ret: u32 = 0;
@@ -210,7 +213,9 @@ mod win {
                 res = Err(io::Error::last_os_error());
             } else {
                 let mut n = 0u32;
-                if WriteFile(h, data.as_ptr(), data.len() as u32, &mut n, std::ptr::null_mut()) == 0 {
+                let mut t = crate::source::Aligne::new(data.len());
+                t.as_mut().copy_from_slice(data);
+                if WriteFile(h, t.as_mut().as_ptr(), data.len() as u32, &mut n, std::ptr::null_mut()) == 0 {
                     res = Err(io::Error::last_os_error());
                 } else if n as usize != data.len() {
                     res = Err(io::Error::new(io::ErrorKind::WriteZero, crate::i18n::l("écriture incomplète")));

@@ -1,6 +1,6 @@
 [package]
 name = "ataecina"
-version = "0.11.0"
+version = "0.11.1"
 edition = "2021"
 authors = ["Domingo Olmo Martin"]
 license = "MIT"
