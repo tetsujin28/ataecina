@@ -6,7 +6,6 @@ use crate::platform;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
-use std::process::Command;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
@@ -239,11 +238,17 @@ pub fn executer(rc: &RecConfig, photorec: Option<&Path>, source: PathBuf, drive:
     let cmd_pr = format!("partition_none,options,keep_corrupted_file,fileopt,everything,disable,{},{espace},search", modules.join(","));
     log(format!("{}{}...", l("Analyse de la carte avec PhotoRec : "), labels.join(", ")));
 
-    let mut c = Command::new(photorec);
-    c.arg("/log").arg("/logname").arg(session.join("photorec.log")).arg("/d").arg(session.join("recup_dir")).arg("/cmd").arg(&source).arg(cmd_pr);
-    c.current_dir(session);
-    platform::console_cachee(&mut c);
-    let mut ch = c.spawn().map_err(|e| f("impossible de lancer PhotoRec : {}", &[&e]))?;
+    let args: Vec<std::ffi::OsString> = vec![
+        "/log".into(),
+        "/logname".into(),
+        session.join("photorec.log").into(),
+        "/d".into(),
+        session.join("recup_dir").into(),
+        "/cmd".into(),
+        source.clone().into(),
+        cmd_pr.into(),
+    ];
+    let mut ch = platform::lancer_invisible(photorec, &args, session).map_err(|e| f("impossible de lancer PhotoRec : {}", &[&e]))?;
 
     let mut deja: HashSet<String> = HashSet::new();
     let mut maj = || {
@@ -260,12 +265,11 @@ pub fn executer(rc: &RecConfig, photorec: Option<&Path>, source: PathBuf, drive:
     };
     let statut = loop {
         if stop.load(Ordering::Relaxed) {
-            let _ = ch.kill();
-            let _ = ch.wait();
+            ch.tuer();
             maj();
             return Err("stop".into());
         }
-        match ch.try_wait() {
+        match ch.fini() {
             Ok(Some(s)) => break Some(s),
             Ok(None) => {}
             Err(_) => break None,
@@ -278,8 +282,8 @@ pub fn executer(rc: &RecConfig, photorec: Option<&Path>, source: PathBuf, drive:
         let e = etat.lock().unwrap();
         (e.trouves.len(), e.total_size)
     };
-    if !statut.map(|s| s.success()).unwrap_or(false) && n == 0 {
-        return Err(f("PhotoRec s'est arrêté avec une erreur ({}). Consultez photorec.log dans {}", &[&statut.map(|s| s.to_string()).unwrap_or_default(), &session.display()]));
+    if statut != Some(0) && n == 0 {
+        return Err(f("PhotoRec s'est arrêté avec une erreur ({}). Consultez photorec.log dans {}", &[&statut.map(|s| format!("code {s}")).unwrap_or_default(), &session.display()]));
     }
     log(f("Terminé : {} fichier(s) vidéo récupéré(s), {}.", &[&n, &crate::fmt_bytes(total)]));
     Ok(())

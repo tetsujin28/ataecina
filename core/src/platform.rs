@@ -28,14 +28,69 @@ pub fn sans_console(c: &mut Command) -> &mut Command {
     c
 }
 
-/// PhotoRec a besoin d'une vraie console pour son affichage texte : on lui en donne une, réduite.
-pub fn console_cachee(c: &mut Command) -> &mut Command {
+/// Programme lancé en arrière-plan (PhotoRec), qu'on peut surveiller et arrêter.
+pub trait Processus: Send {
+    /// None tant qu'il tourne, sinon Some(code de sortie).
+    fn fini(&mut self) -> io::Result<Option<i64>>;
+    fn tuer(&mut self);
+}
+
+impl Processus for std::process::Child {
+    fn fini(&mut self) -> io::Result<Option<i64>> {
+        Ok(self.try_wait()?.map(|s| s.code().map(|c| c as i64).unwrap_or(-1)))
+    }
+    fn tuer(&mut self) {
+        let _ = self.kill();
+        let _ = self.wait();
+    }
+}
+
+/// Lance un programme en mode texte (PhotoRec) sans rien afficher.
+/// Sous Windows, PhotoRec a besoin d'une vraie console : on lui en crée une, mais sa fenêtre reste masquée.
+pub fn lancer_invisible(prog: &Path, args: &[std::ffi::OsString], dossier: &Path) -> io::Result<Box<dyn Processus>> {
     #[cfg(windows)]
     {
-        use std::os::windows::process::CommandExt;
-        c.creation_flags(0x0000_0010); // CREATE_NEW_CONSOLE
+        win::lancer_masque(prog, args, dossier)
     }
-    c
+    #[cfg(not(windows))]
+    {
+        let mut c = Command::new(prog);
+        c.args(args).current_dir(dossier);
+        Ok(Box::new(c.spawn()?))
+    }
+}
+
+/// Construit une ligne de commande Windows (règles de guillemets de CommandLineToArgvW).
+pub fn ligne_de_commande(prog: &Path, args: &[std::ffi::OsString]) -> String {
+    let mut res = format!("\"{}\"", prog.display());
+    for a in args {
+        let a = a.to_string_lossy();
+        res.push(' ');
+        if !a.is_empty() && !a.contains([' ', '\t', '"']) {
+            res.push_str(&a);
+            continue;
+        }
+        res.push('"');
+        let mut barres = 0;
+        for ch in a.chars() {
+            match ch {
+                '\\' => barres += 1,
+                '"' => {
+                    res.push_str(&"\\".repeat(barres * 2 + 1));
+                    res.push('"');
+                    barres = 0;
+                }
+                _ => {
+                    res.push_str(&"\\".repeat(barres));
+                    res.push(ch);
+                    barres = 0;
+                }
+            }
+        }
+        res.push_str(&"\\".repeat(barres * 2));
+        res.push('"');
+    }
+    res
 }
 
 pub fn chemin_peripherique(drive: &str) -> String {
@@ -90,6 +145,62 @@ mod win {
     const FSCTL_LOCK_VOLUME: u32 = 0x0009_0018;
     const FSCTL_UNLOCK_VOLUME: u32 = 0x0009_001C;
     const FSCTL_DISMOUNT_VOLUME: u32 = 0x0009_0020;
+
+    struct ProcessusMasque {
+        h: HANDLE,
+    }
+    unsafe impl Send for ProcessusMasque {}
+
+    impl Processus for ProcessusMasque {
+        fn fini(&mut self) -> io::Result<Option<i64>> {
+            use windows_sys::Win32::Foundation::WAIT_OBJECT_0;
+            use windows_sys::Win32::System::Threading::{GetExitCodeProcess, WaitForSingleObject};
+            unsafe {
+                if WaitForSingleObject(self.h, 0) != WAIT_OBJECT_0 {
+                    return Ok(None);
+                }
+                let mut code = 0u32;
+                if GetExitCodeProcess(self.h, &mut code) == 0 {
+                    return Err(io::Error::last_os_error());
+                }
+                Ok(Some(code as i32 as i64))
+            }
+        }
+        fn tuer(&mut self) {
+            use windows_sys::Win32::System::Threading::{TerminateProcess, WaitForSingleObject};
+            unsafe {
+                TerminateProcess(self.h, 1);
+                WaitForSingleObject(self.h, 5000);
+            }
+        }
+    }
+
+    impl Drop for ProcessusMasque {
+        fn drop(&mut self) {
+            unsafe { CloseHandle(self.h) };
+        }
+    }
+
+    pub fn lancer_masque(prog: &Path, args: &[std::ffi::OsString], dossier: &Path) -> io::Result<Box<dyn Processus>> {
+        use windows_sys::Win32::System::Threading::{CreateProcessW, CREATE_NEW_CONSOLE, PROCESS_INFORMATION, STARTF_USESHOWWINDOW, STARTUPINFOW};
+        use windows_sys::Win32::UI::WindowsAndMessaging::SW_HIDE;
+        let mut ligne = wide(&super::ligne_de_commande(prog, args));
+        let appli = wide(&prog.to_string_lossy());
+        let rep = wide(&dossier.to_string_lossy());
+        unsafe {
+            let mut si: STARTUPINFOW = std::mem::zeroed();
+            si.cb = std::mem::size_of::<STARTUPINFOW>() as u32;
+            si.dwFlags = STARTF_USESHOWWINDOW;
+            si.wShowWindow = SW_HIDE as u16;
+            let mut pi: PROCESS_INFORMATION = std::mem::zeroed();
+            let ok = CreateProcessW(appli.as_ptr(), ligne.as_mut_ptr(), std::ptr::null(), std::ptr::null(), 0, CREATE_NEW_CONSOLE, std::ptr::null(), rep.as_ptr(), &si, &mut pi);
+            if ok == 0 {
+                return Err(io::Error::last_os_error());
+            }
+            CloseHandle(pi.hThread);
+            Ok(Box::new(ProcessusMasque { h: pi.hProcess }))
+        }
+    }
 
     pub fn wide(s: &str) -> Vec<u16> {
         std::ffi::OsStr::new(s).encode_wide().chain(Some(0)).collect()
@@ -298,4 +409,17 @@ pub fn ouvrir_dossier(p: &Path) {
     #[cfg(all(unix, not(target_os = "macos")))]
     let mut c = Command::new("xdg-open");
     let _ = c.arg(p).spawn();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::ligne_de_commande;
+    use std::path::Path;
+
+    #[test]
+    fn guillemets_ligne_de_commande() {
+        let a = |v: &[&str]| v.iter().map(|s| std::ffi::OsString::from(*s)).collect::<Vec<_>>();
+        let l = ligne_de_commande(Path::new(r"C:\Program Files\testdisk\photorec_win.exe"), &a(&["/d", r"D:\Mes rushes\recup_dir", r"\\.\E:", "partition_none,search", r"D:\fin\", "a\"b", ""]));
+        assert_eq!(l, r#""C:\Program Files\testdisk\photorec_win.exe" /d "D:\Mes rushes\recup_dir" \\.\E: partition_none,search D:\fin\ "a\"b" """#);
+    }
 }
