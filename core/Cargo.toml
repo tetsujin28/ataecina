@@ -1,0 +1,37 @@
+[package]
+name = "ataecina-core"
+version = "0.11.0"
+edition = "2021"
+authors = ["Domingo Olmo Martin"]
+license = "MIT"
+description = "Ataecina, moteur de récupération et de réparation de rushes : lecture exFAT/FAT32, image façon ddrescue, PhotoRec, untrunc"
+
+[lib]
+name = "ataecina_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ataecina-cli"
+path = "src/bin/cli.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = "0.4"
+filetime = "0.2"
+fs2 = "0.4"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.59", features = [
+  "Win32_Foundation",
+  "Win32_Storage_FileSystem",
+  "Win32_System_IO",
+  "Win32_System_Ioctl",
+  "Win32_System_Threading",
+  "Win32_Security",
+  "Win32_UI_Shell",
+  "Win32_UI_WindowsAndMessaging",
+] }
+
+[dev-dependencies]
+flate2 = "1"
