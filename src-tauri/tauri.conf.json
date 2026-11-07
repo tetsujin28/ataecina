@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Ataecina",
+  "version": "0.11.0",
+  "identifier": "com.domingoolmomartin.ataecina",
+  "build": {
+    "frontendDist": "../ui"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "Ataecina by Domingo Olmo Martin",
+        "width": 1440,
+        "height": 920,
+        "minWidth": 1100,
+        "minHeight": 720,
+        "theme": "Dark",
+        "backgroundColor": "#0b0c0e"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "publisher": "Domingo Olmo Martin",
+    "copyright": "© 2026 Domingo Olmo Martin. MIT License.",
+    "category": "Video",
+    "shortDescription": "Récupération et réparation de rushes vidéo",
+    "longDescription": "Ataecina relit les cartes caméra exFAT et FAT32 (fichiers supprimés, cartes reformatées ou abîmées), crée des images de cartes défectueuses à la manière de ddrescue, pilote PhotoRec et répare les MOV / MP4 avec untrunc.",
+    "windows": {
+      "nsis": {
+        "languages": ["French", "English", "Spanish"],
+        "displayLanguageSelector": true
+      }
+    }
+  }
+}
