@@ -59,6 +59,8 @@ Ataecina drives these free tools, to install from their official site:
 
 Put them next to `Ataecina.exe`, in a `tools` folder, or in the PATH. Their location can also be set in the app.
 
+**Without these tools, repair does not start.** The **[full user guide](docs/GUIDE.md)** explains where to download them and how to arrange them, then walks through recovery and repair step by step, with annotated screenshots.
+
 ## Build
 
 Rust and the Tauri 2 CLI are required.

@@ -3,3 +3,4 @@
 /src-tauri/gen
 *.dd
 *.dd.map
+docs/tools/out/
