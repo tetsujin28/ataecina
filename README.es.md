@@ -59,6 +59,8 @@ Ataecina controla estas herramientas gratuitas, que se instalan desde su sitio o
 
 Colócalas junto a `Ataecina.exe`, en una carpeta `tools`, o en el PATH. Su ubicación también se puede indicar en la aplicación.
 
+**Sin estas herramientas, la reparación no arranca.** El **[manual de uso completo](docs/GUIDE.es.md)** explica dónde descargarlas y cómo colocarlas, y describe paso a paso la recuperación y la reparación, con capturas comentadas.
+
 ## Compilación
 
 Se necesitan Rust y la CLI de Tauri 2.
