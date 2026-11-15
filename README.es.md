@@ -72,6 +72,14 @@ cd src-tauri && cargo tauri build
 
 El motor (`core`) incluye una herramienta de línea de comandos, `ataecina-cli`, usada para las pruebas.
 
-## Licencia
+## Apps hermanas
 
-MIT. © 2026 Domingo Olmo Martin.
+- [Bandua](https://github.com/tetsujin28/bandua): volcar las tarjetas de cámara y verificar cada copia.
+- [Lugus Transfer](https://github.com/tetsujin28/lugus-transfer): enviar el material de un ordenador a otro con un enlace y un código, verificado al llegar.
+- [Bandua MHL Companion](https://github.com/tetsujin28/bandua-mhl-companion): comprobar el material recibido con su MHL.
+
+## Licencia y aviso
+
+© 2026 Domingo Olmo Martin. Distribuido bajo [licencia MIT](LICENSE).
+
+Ataecina es una herramienta de ayuda para recuperar y reparar medios. Se ofrece «tal cual», sin ninguna garantía: la recuperación nunca está garantizada y el autor no se hace responsable de ninguna pérdida, corrupción o eliminación de datos. Para material irremplazable en una tarjeta dañada físicamente, acude a un profesional de recuperación de datos antes de hacer nada.
