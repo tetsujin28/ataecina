@@ -72,6 +72,14 @@ cd src-tauri && cargo tauri build
 
 The engine (`core`) has a command line tool, `ataecina-cli`, used for tests.
 
-## License
+## Sister apps
 
-MIT. © 2026 Domingo Olmo Martin.
+- [Bandua](https://github.com/tetsujin28/bandua): offload camera cards and verify every copy.
+- [Lugus Transfer](https://github.com/tetsujin28/lugus-transfer): send footage from one computer to another with a link and a code, verified on arrival.
+- [Bandua MHL Companion](https://github.com/tetsujin28/bandua-mhl-companion): check received footage against its MHL.
+
+## License and disclaimer
+
+© 2026 Domingo Olmo Martin. Released under the [MIT License](LICENSE).
+
+Ataecina is a tool to help recover and repair media. It is provided "as is", without any warranty: recovery is never guaranteed, and the author cannot be held responsible for any loss, corruption or deletion of data. For irreplaceable footage on a physically damaged card, contact a data recovery professional before doing anything.
