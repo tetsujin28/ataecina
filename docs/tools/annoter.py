@@ -46,6 +46,8 @@ def make(out,src,lang,marks,crop=None,margin=40,col=ORANGE,dimbg=True,maxw=1400)
     img.quantize(256,method=Image.Quantize.MEDIANCUT,dither=Image.Dither.NONE).save(GUIDE/f"{out}_{lang}.png",optimize=True)
 U=lambda *k:(lambda R:union([R[x] for x in k]))
 for L in ["fr","en","es"]:
+    make("30_update","update",L,[("verBadge",None,6)],crop=["verBadge","quitBtn"],margin=24,maxw=1000)
+    make("31_settings","settings",L,[("optUpdate",1,8,"right")],crop=["setBox"],margin=24)
     # outils
     make("00_tools_missing","rep_missing",L,[("pills",1,8,"left"),("untruncField",2,8,"right")],col=RED)
     make("01_tools_error","rep_error",L,[("toast",1,8,"left"),("pills",2,8,"left")],col=RED)

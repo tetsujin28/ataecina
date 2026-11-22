@@ -57,6 +57,8 @@ header{display:flex;align-items:center;gap:16px;padding:14px 22px;border-bottom:
 .pill.click:hover{border-color:var(--line2);color:var(--text)}
 .iconbtn{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--text2);cursor:pointer}
 .iconbtn:hover{color:var(--text);border-color:var(--line2);background:var(--panel2)}
+.verup{font:650 11px/1 var(--mono);color:var(--accent);background:var(--accent-soft);border:1px solid rgba(255,181,71,.45);padding:8px 10px;border-radius:9px;cursor:pointer;white-space:nowrap}
+.verup:hover{border-color:var(--accent)}
 
 main{display:grid;grid-template-columns:minmax(420px,.92fr) minmax(480px,1.08fr);gap:18px;padding:18px 22px 22px;min-height:0}
 .col{display:flex;flex-direction:column;gap:14px;min-height:0}
@@ -430,7 +432,9 @@ a.lnk:hover{border-color:var(--accent)}
       <button class="tab" data-tab="repair"><span class="n">02</span>Réparation<span class="recdot" id="tabRepDot" hidden></span></button>
     </nav>
     <div class="tools" id="tools"></div>
+    <button class="verup" id="verBadge" data-notr hidden></button>
     <div class="seg langsel" id="langSel" data-notr><button data-lang="fr">FR</button><button data-lang="en">EN</button><button data-lang="es">ES</button></div>
+    <button class="iconbtn" id="settingsBtn" title="Réglages"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
     <button class="lnkbtn" id="aboutBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.01"/></svg>Crédits</button>
     <button class="iconbtn" id="quitBtn" title="Quitter Ataecina">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.3 6.3a8 8 0 1 0 11.4 0"/></svg>
@@ -729,6 +733,20 @@ a.lnk:hover{border-color:var(--accent)}
   </div>
 </div>
 
+<div class="ov" id="setOv">
+  <div class="about info">
+    <div class="about-h">
+      <div class="grow"><h3>Réglages</h3></div>
+      <button class="iconbtn" id="setClose" title="Fermer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="about-b">
+      <div style="font:600 11px var(--mono);letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Versions</div>
+      <label class="switch" id="optUpdateRow"><input type="checkbox" id="optUpdate"><span class="tr"></span>
+        <span class="t"><b>Vérifier les nouvelles versions</b><span>Une fois au lancement, Ataecina demande à GitHub si une version plus récente existe. Aucune autre donnée n'est envoyée. Décocher pour qu'elle ne contacte jamais GitHub.</span></span></label>
+    </div>
+  </div>
+</div>
+
 <div class="ov" id="infoOv">
   <div class="about info">
     <div class="about-h">
@@ -883,6 +901,7 @@ async function saveConfig(patch){
 function render(){
   const c = S.config;
   if (S.version) $('#ver').textContent = S.version;
+  if (S.version && !UPD_STARTED) { UPD_STARTED = true; checkUpdate(); }
   // outils
   const t = S.tools;
   // « admin » ne concerne que la lecture directe d'une carte : PhotoRec demande ses droits lui-même
@@ -1473,6 +1492,44 @@ $('#brand').onclick = () => { if (S.version) $('#infoVer').textContent = S.versi
 $('#infoClose').onclick = () => $('#infoOv').classList.remove('show');
 $('#infoOv').addEventListener('mousedown', e => { if (e.target.id === 'infoOv') $('#infoOv').classList.remove('show'); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#infoOv').classList.remove('show'); });
+/* ---------- versions et réglages ---------- */
+const RELEASES_API = 'https://api.github.com/repos/tetsujin28/ataecina/releases?per_page=15';
+const RELEASES_PAGE = 'https://github.com/tetsujin28/ataecina/releases';
+// « v0.12.0 » ou « Bêta 0.11.4 » -> [0, 12, 0] ; null si aucun numéro.
+function parseVersion(s){ const m = /(\d+)\.(\d+)\.(\d+)/.exec(String(s || '')); return m ? [+m[1], +m[2], +m[3]] : null; }
+// > 0 si a est plus récente que b.
+function compareVersions(a, b){ for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] - b[i]; return 0; }
+let LATEST = null, UPD_STARTED = false;
+const updateOn = () => { try { return localStorage.getItem('lz-update') !== '0'; } catch(e){ return true; } };
+// Une seule requête à GitHub ; pré-versions comprises, brouillons exclus. Hors ligne : rien.
+async function checkUpdate(){
+  LATEST = null;
+  if (updateOn()) {
+    try {
+      const r = await fetch(RELEASES_API, {headers: {Accept: 'application/vnd.github+json'}});
+      if (r.ok) {
+        let best = null;
+        for (const x of await r.json()) { if (x.draft) continue; const v = parseVersion(x.tag_name); if (v && (!best || compareVersions(v, best) > 0)) best = v; }
+        const mine = parseVersion(S.version || $('#ver').textContent);
+        if (best && mine && compareVersions(best, mine) > 0) LATEST = best.join('.');
+      }
+    } catch(e){}
+  }
+  renderVersion();
+}
+// La version est déjà affichée à côté du nom : le badge n'apparaît que s'il y a plus récent.
+function renderVersion(){
+  const b = $('#verBadge');
+  b.hidden = !LATEST;
+  if (LATEST) { b.textContent = tr('v' + LATEST + ' disponible'); b.title = tr('Une nouvelle version est disponible : ouvrir la page de téléchargement'); }
+}
+$('#verBadge').onclick = () => api('/api/url', {url: RELEASES_PAGE}).catch(() => window.open(RELEASES_PAGE, '_blank'));
+$('#settingsBtn').onclick = () => { $('#optUpdate').checked = updateOn(); $('#setOv').classList.add('show'); };
+$('#optUpdate').onchange = () => { try { localStorage.setItem('lz-update', $('#optUpdate').checked ? '1' : '0'); } catch(e){} checkUpdate(); };
+$('#setClose').onclick = () => $('#setOv').classList.remove('show');
+$('#setOv').addEventListener('mousedown', e => { if (e.target.id === 'setOv') $('#setOv').classList.remove('show'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#setOv').classList.remove('show'); });
+
 $('#aboutBtn').onclick = () => { if (S.version) $('#aboutVer').textContent = S.version; $('#aboutOv').classList.add('show'); };
 $('#aboutClose').onclick = () => $('#aboutOv').classList.remove('show');
 $('#aboutOv').addEventListener('mousedown', e => { if (e.target.id === 'aboutOv') $('#aboutOv').classList.remove('show'); });

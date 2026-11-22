@@ -35,6 +35,8 @@ Rendez-vous sur la **[page des Releases](https://github.com/tetsujin28/ataecina/
 
 **Premier lancement.** L'application n'est pas encore signée : Windows affiche un avertissement une fois. Cliquez sur « Informations complémentaires », puis « Exécuter quand même ».
 
+**Nouvelles versions.** Au lancement, l'application demande une fois à GitHub si une version plus récente existe et, si c'est le cas, l'indique en haut à droite ; un clic ouvre la page de téléchargement. Rien ne s'installe tout seul et aucune autre donnée n'est envoyée. Vous pouvez désactiver cette vérification dans les Réglages (la roue dentée).
+
 La lecture directe d'une carte demande les droits administrateur. Ataecina propose de se relancer en administrateur quand c'est nécessaire.
 
 ## Ce qu'il fait
