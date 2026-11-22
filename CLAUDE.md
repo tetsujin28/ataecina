@@ -2,7 +2,7 @@
 
 Application gratuite de Domingo Olmo Martin (Dom) pour ramener des images perdues : lecture des cartes caméra exFAT et FAT32, fichiers supprimés, carte formatée par erreur, restauration du secteur de démarrage, image de carte façon GNU ddrescue, recherche PhotoRec, et réparation par lot des MOV / MP4 cassés avec untrunc et un rush sain de référence.
 
-**Windows uniquement.** Bêta (version 0.11.4). Licence MIT. App sœur de [Bandua](https://github.com/tetsujin28/bandua).
+**Windows uniquement.** Bêta (version 0.11.5). Licence MIT. App sœur de [Bandua](https://github.com/tetsujin28/bandua).
 
 ## Règles de travail
 
@@ -51,4 +51,4 @@ Hors Windows, l'interface peut être testée dans un navigateur avec la feature 
 
 ## Publier une version
 
-Changer le numéro dans `core/Cargo.toml`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, la constante `VERSION` de `src-tauri/src/main.rs` (« Bêta x.y.z ») et les deux mentions « Bêta x.y.z » de `ui/index.html`. Dom crée ensuite la Release `vX.Y.Z` lui-même. Fichiers produits : `Ataecina_x.y.z_portable.exe`, `-setup.exe` et `.msi`.
+Changer le numéro dans `core/Cargo.toml`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, la constante `VERSION` de `src-tauri/src/main.rs` (« Bêta x.y.z ») et les trois mentions « Bêta x.y.z » de `ui/index.html`. Dom crée ensuite la Release `vX.Y.Z` lui-même. Fichiers produits : `Ataecina_x.y.z_portable.exe`, `-setup.exe` et `.msi`.

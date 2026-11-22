@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">Ataecina user guide</h1>
-<p align="center"><b>Beta 0.11.4 · Windows</b></p>
+<p align="center"><b>Beta 0.11.5 · Windows</b></p>
 <p align="center">
   <b>English</b> · <a href="GUIDE.fr.md">Français</a> · <a href="GUIDE.es.md">Español</a>
 </p>
