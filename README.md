@@ -35,6 +35,8 @@ Go to the **[Releases page](https://github.com/tetsujin28/ataecina/releases)**:
 
 **First launch.** The app is not signed yet: Windows shows a warning once. Click "More info", then "Run anyway".
 
+**New versions.** At startup, the app asks GitHub once whether a newer version exists and, if so, shows it at the top right; one click opens the download page. Nothing installs itself, and nothing else is sent. You can turn this check off in the Settings (the gear).
+
 Reading a card directly needs administrator rights. Ataecina offers to restart itself as administrator when needed.
 
 ## What it does

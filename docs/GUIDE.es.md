@@ -51,6 +51,16 @@ Los archivos están en la [página de Releases](https://github.com/tetsujin28/at
 
 **Permisos de administrador.** Leer una tarjeta directamente requiere permisos de administrador. Si hace falta, Ataecina muestra una franja y propone reiniciarse como administrador; Windows te pide que lo confirmes. La etiqueta **admin**, arriba a la derecha, pasa a verde.
 
+### Versión y ajustes
+
+El número de versión aparece junto al nombre, arriba a la izquierda. Al iniciar, Ataecina pregunta una vez a GitHub si existe una versión más reciente (las versiones beta cuentan). Si es así, aparece una etiqueta **vX.Y.Z disponible** arriba a la derecha: un clic abre la página de descarga. Nada se instala solo; descargas la nueva versión cuando lo decidas, mejor entre dos recuperaciones. Sin conexión, no se muestra nada y la aplicación funciona con normalidad.
+
+<p align="center"><img src="guide/30_update_es.png" width="560" alt="Hay una nueva versión disponible"></p>
+
+La rueda dentada abre los **Ajustes**. El interruptor **Buscar nuevas versiones** (1) está activado por defecto; desactívalo para que Ataecina no contacte nunca con GitHub. No se envía ningún otro dato durante esta comprobación.
+
+<p align="center"><img src="guide/31_settings_es.png" width="620" alt="Los ajustes"></p>
+
 ## 3. Instalar los programas complementarios (imprescindible)
 
 Ataecina utiliza tres programas gratuitos que **no** vienen con él. Siguen siendo propiedad de sus autores: descárgalos siempre desde su **web oficial**.
@@ -244,6 +254,9 @@ La lectura de la tarjeta admite exFAT y FAT32, los formatos de casi todas las ta
 
 **Un archivo reparado es más corto de lo previsto.**
 untrunc recupera todo lo aprovechable. Si el final del archivo nunca se llegó a escribir en la tarjeta, no se puede reconstruir.
+
+**¿Ataecina envía datos por Internet?**
+No. La lectura, la recuperación y la reparación se hacen enteramente en tu ordenador. La única conexión es la búsqueda de nuevas versiones al iniciar, una petición a GitHub que no envía nada más; puedes desactivarla en los Ajustes.
 
 ## 11. Aviso y licencia
 

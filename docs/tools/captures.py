@@ -57,6 +57,8 @@ SEL = {
     "untruncField": "q('#untrunc')?.closest('.field')", "ffmpegField": "q('#ffmpegDir')?.closest('.field')", "sortieField": "q('#sortie')?.closest('.field')",
     "startBtn": "q('#startBtn')", "stats": "q('#stats')", "results": "q('#results')", "resFail": "[...document.querySelectorAll('#results .res')].find(r=>/ECHEC|FAIL|FALL|chec/i.test(r.textContent))",
     "toast": "q('#toasts .toast')", "bigCount": "q('#bigCount')?.parentElement",
+    "verBadge": "q('#verBadge')", "settingsBtn": "q('#settingsBtn')", "aboutBtn": "q('#aboutBtn')", "quitBtn": "q('#quitBtn')",
+    "optUpdate": "q('#optUpdateRow')", "setBox": "q('#setOv .about')",
 }
 WIN = r"""(()=>{const re=/\/([A-Z]):((?:\/[^\s<>"'\/]*)*)/g;const x=s=>s.replace(/(Ataecina\\)(untrunc|ffmpeg|ffprobe|photorec)(?![\w.])/g,(m,a,n)=>a+(n==='photorec'?'photorec_win':n)+'.exe');const f=s=>x(s.replace(re,(m,d,r)=>d+':'+(r?r.replace(/\//g,'\\'):'\\')));
 const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){re.lastIndex=0;if(re.test(n.nodeValue)){re.lastIndex=0;n.nodeValue=f(n.nodeValue)}}
@@ -111,8 +113,16 @@ async def until(page, js, limit=120):
         await page.wait_for_timeout(250)
 
 
-async def open_page(b):
+async def open_page(b, newer=None):
     page = await b.new_page(viewport={"width": W, "height": H}, device_scale_factor=SCALE)
+    # Recherche de nouvelle version : jamais de vraie requête. Sans `newer`, hors ligne.
+    async def releases(route, *_):
+        if newer:
+            await route.fulfill(status=200, content_type="application/json", headers={"access-control-allow-origin": "*"},
+                                body=json.dumps([{"tag_name": "v" + newer, "draft": False}]))
+        else:
+            await route.abort()
+    await page.route("https://api.github.com/**", releases)
     async def drives(route):
         await route.fulfill(status=200, content_type="application/json", body=json.dumps(DRIVES))
     await page.route("**/api/drives*", drives)
@@ -178,10 +188,19 @@ async def phase_avec_outils(b, lang):
     await page.close()
 
 
+async def phase_versions(b, lang):
+    """Badge « nouvelle version » et fenêtre de réglages."""
+    page = await open_page(b, newer="0.12.0")
+    await shot(page, f"update_{lang}")
+    await page.click("#settingsBtn"); await page.wait_for_timeout(300)
+    await shot(page, f"settings_{lang}")
+    await page.close()
+
+
 async def main(lang):
     async with async_playwright() as p:
         b = await (p.chromium.launch(executable_path=CHROME) if CHROME else p.chromium.launch())
-        for outils, phase in [(False, phase_sans_outils), (True, phase_avec_outils)]:
+        for outils, phase in [(False, phase_sans_outils), (True, phase_avec_outils), (True, phase_versions)]:
             srv = server(lang, outils)
             try:
                 await phase(b, lang)

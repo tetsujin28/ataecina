@@ -51,6 +51,16 @@ Les fichiers se trouvent sur la [page des Releases](https://github.com/tetsujin2
 
 **Droits administrateur.** Lire une carte directement demande les droits administrateur. Si besoin, Ataecina affiche un bandeau et propose de se relancer en administrateur ; Windows vous demande alors de confirmer. La pastille **admin**, en haut à droite, passe au vert.
 
+### Version et réglages
+
+Le numéro de version est affiché à côté du nom, en haut à gauche. Au lancement, Ataecina demande une fois à GitHub si une version plus récente existe (les versions bêta comptent). Si c'est le cas, un badge **vX.Y.Z disponible** apparaît en haut à droite : un clic ouvre la page de téléchargement. Rien ne s'installe tout seul ; vous téléchargez la nouvelle version quand vous le décidez, de préférence entre deux récupérations. Hors ligne, rien ne s'affiche et l'application fonctionne normalement.
+
+<p align="center"><img src="guide/30_update_fr.png" width="560" alt="Une nouvelle version est disponible"></p>
+
+La roue dentée ouvre les **Réglages**. L'interrupteur **Vérifier les nouvelles versions** (1) est activé par défaut ; désactivez-le pour qu'Ataecina ne contacte jamais GitHub. Aucune autre donnée n'est envoyée lors de cette vérification.
+
+<p align="center"><img src="guide/31_settings_fr.png" width="620" alt="Les réglages"></p>
+
 ## 3. Installer les logiciels complémentaires (indispensable)
 
 Ataecina pilote trois logiciels gratuits qui ne sont **pas** livrés avec lui. Ils restent la propriété de leurs auteurs : téléchargez-les toujours depuis leur **site officiel**.
@@ -244,6 +254,9 @@ La lecture de la carte gère exFAT et FAT32, les formats de la quasi-totalité d
 
 **Un fichier réparé est plus court que prévu.**
 untrunc récupère tout ce qui est exploitable. Si la fin du fichier n'a jamais été écrite sur la carte, elle ne peut pas être reconstruite.
+
+**Ataecina envoie-t-il des données sur Internet ?**
+Non. La lecture, la récupération et la réparation se font entièrement sur votre ordinateur. La seule connexion est la vérification des nouvelles versions au lancement, une requête à GitHub qui n'envoie rien d'autre ; vous pouvez la désactiver dans les Réglages.
 
 ## 11. Avertissement et licence
 

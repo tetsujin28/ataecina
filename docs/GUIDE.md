@@ -51,6 +51,16 @@ The files are on the [Releases page](https://github.com/tetsujin28/ataecina/rele
 
 **Administrator rights.** Reading a card directly requires administrator rights. When needed, Ataecina shows a banner and offers to restart as administrator; Windows asks you to confirm. The **admin** pill, top right, turns green.
 
+### Version and settings
+
+The version number is shown next to the name, at the top left. At startup, Ataecina asks GitHub once whether a newer version exists (beta versions count). If so, a **vX.Y.Z available** badge appears at the top right: one click opens the download page. Nothing installs itself; you download the new version when you decide to, ideally between two recoveries. When offline, nothing is shown and the app works as usual.
+
+<p align="center"><img src="guide/30_update_en.png" width="560" alt="A new version is available"></p>
+
+The gear opens the **Settings**. The **Check for new versions** switch (1) is on by default; turn it off so Ataecina never contacts GitHub. No other data is sent during this check.
+
+<p align="center"><img src="guide/31_settings_en.png" width="620" alt="The settings"></p>
+
 ## 3. Installing the additional software (required)
 
 Ataecina drives three free programs that are **not** shipped with it. They remain the property of their authors: always download them from their **official website**.
@@ -244,6 +254,9 @@ Card reading handles exFAT and FAT32, the formats of almost every camera card. F
 
 **A repaired file is shorter than expected.**
 untrunc recovers everything usable. If the end of the file was never written to the card, it cannot be rebuilt.
+
+**Does Ataecina send data over the Internet?**
+No. Reading, recovery and repair happen entirely on your computer. The only connection is the check for new versions at startup, a request to GitHub that sends nothing else; you can turn it off in the Settings.
 
 ## 11. Disclaimer and license
 

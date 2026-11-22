@@ -35,6 +35,8 @@ Ve a la **[página de Releases](https://github.com/tetsujin28/ataecina/releases)
 
 **Primer inicio.** La aplicación aún no está firmada: Windows muestra un aviso una vez. Haz clic en «Más información» y luego en «Ejecutar de todas formas».
 
+**Nuevas versiones.** Al iniciar, la aplicación pregunta una vez a GitHub si existe una versión más reciente y, si es así, lo indica arriba a la derecha; un clic abre la página de descarga. Nada se instala solo y no se envía ningún otro dato. Puedes desactivar esta comprobación en los Ajustes (la rueda dentada).
+
 Leer una tarjeta directamente requiere derechos de administrador. Ataecina propone reiniciarse como administrador cuando hace falta.
 
 ## Qué hace
